@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My notes</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "styles.css" %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Notes</h1>
+        {% block content %}
+        <ul>
+            {% for note in notes %}
+                <li>
+                    <h2>{{ note.caption }}</h2>
+                    <p>{{ note.text }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endblock %}
+    </div>
+</body>
+</html>
