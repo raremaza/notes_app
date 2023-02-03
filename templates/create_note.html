@@ -1,0 +1,22 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Create note</title>#}
+{#</head>#}
+{#<body>#}
+{% block content %}
+    <form  method="post">
+        {% csrf_token %}
+        {% crispy form %}
+    </form>
+{#    <form action="/notes-nikita/create-note/" method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form }}#}
+{#        <input type="submit" value ="Submit">#}
+{#    </form>#}
+{% endblock %}
+{#</body>#}
+{#</html>#}
