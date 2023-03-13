@@ -1,10 +1,13 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+
+from .forms import CreateNoteForm, UpdateNoteForm
 from .models import Notes
 
 from django.db.models import F
 from django.db.models import Q
 from django.db.models import Avg, Count, Min, Sum, Max
+
 
 # Create your views here.
 def index(request):
@@ -24,17 +27,17 @@ def index(request):
     #     ]
     # }
 
-    #Task_1
+    # Task_1
     # notes_count = Notes.objects.count()
     # print(notes_count)
 
-    #Task_2
-    #notes = Notes.objects.filter(text__contains="Product")
-    #notes = Notes.objects.filter(text__icontains=F("caption"))
-    #notes = Notes.objects.filter(caption__exact = "My_note")
-    #notes = Notes.objects.all()[:2]
+    # Task_2
+    # notes = Notes.objects.filter(text__contains="Product")
+    # notes = Notes.objects.filter(text__icontains=F("caption"))
+    # notes = Notes.objects.filter(caption__exact = "My_note")
+    # notes = Notes.objects.all()[:2]
 
-    #Task_3
+    # Task_3
     # notes_count = Notes.objects.count()
     # print(notes_count)
     # notes_max = Notes.objects.aggregate(notes_maximum = Max('reminder'))
@@ -44,7 +47,35 @@ def index(request):
     # notes_sum = Notes.objects.aggregate(notes_sum=Sum('category_id'))
     # print(notes_sum)
 
-
-
     context = {"notes": notes}
     return render(request, "index.html", context=context)
+
+
+def create_note(request):
+    # if POST -save note
+    if request.method == "POST":
+        print(request.POST)
+        form = CreateNoteForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect("/")
+    # show form
+    else:
+        form = CreateNoteForm()
+    # context = {"form": form}
+    return render(request, 'create_note.html', {"form": form})
+
+
+def update_note(request, note_id):
+    instance = get_object_or_404(Notes, id=note_id)
+    form = UpdateNoteForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect("/")
+    return render(request, 'update_note.html', {"form": form})
+
+
+def delete_note(request, note_id):
+    instance = get_object_or_404(Notes, id=note_id)
+    instance.delete()
+    return HttpResponseRedirect("/")
